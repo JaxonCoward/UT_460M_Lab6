@@ -26,6 +26,10 @@ module mac(
     input [7:0] B,
     input [7:0] C,
     input Load,
+    output done,
     output [7:0] Aout
     );
+
+
+
 endmodule
