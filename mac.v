@@ -25,10 +25,13 @@ module mac(
     input [7:0] Ain,
     input [7:0] B,
     input [7:0] C,
+    input Reset,
     input Load,
     output done,
     output [7:0] Aout
     );
+
+    reg [2:0] cs, ns;
 
 
 
