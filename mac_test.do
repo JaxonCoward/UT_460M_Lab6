@@ -28,7 +28,7 @@ run 40 ns
 force {C[7]} 1
 force {C[6]} 1
 force {C[5]} 1
-force {C[4]} 1
+force {C[4]} 0
 force {C[3]} 0
 force {C[2]} 1
 force {C[1]} 0
