@@ -7,7 +7,7 @@ run 20 ns
 
 force Load 0
 
-run 40 ns
+run 60 ns
 
 force C 2#11100100
 force B 2#00101000
@@ -17,7 +17,7 @@ run 20 ns
 
 force Load 0
 
-run 40 ns
+run 60 ns
 
 force C 2#00110101
 force B 2#10100001
@@ -27,4 +27,4 @@ run 20 ns
 
 force Load 0
 
-run 40 ns
+run 60 ns

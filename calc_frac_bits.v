@@ -21,7 +21,7 @@
 
 //removes the MSB that is 1, and outputs the four bits that follow
 module calc_frac_bits(
-    input [10:0] Frac_in,
+    input [9:0] Frac_in,
     output [3:0] Frac_out
     );
 
@@ -29,8 +29,7 @@ module calc_frac_bits(
     assign Frac_out = frac;
 
     always @(*) begin
-        if(Frac_in[10]) frac <= Frac_in[9:6];
-        else if(Frac_in[9]) frac <= Frac_in[8:5];
+        if(Frac_in[9]) frac <= Frac_in[8:5];
         else if(Frac_in[8]) frac <= Frac_in[7:4];
         else if(Frac_in[7]) frac <= Frac_in[6:3];
         else if(Frac_in[6]) frac <= Frac_in[5:2];

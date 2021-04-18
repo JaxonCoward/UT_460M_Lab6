@@ -41,10 +41,15 @@ module mac(
     reg [2:0]expB;
     reg [2:0]expC;
 
+    reg [12:0] sum;
+    reg [12:0] operand;
+    reg [2:0] sum_exp;
+    reg sum_sign_bit;
+    reg [2:0] shift;
     reg [9:0] product;
     reg [3:0] exp_adder;
     reg sign_bit;
-    reg [7:0] result;
+    reg [7:0] result = 0;
 
     calc_frac_bits fraction(product, frac_wire);
     
@@ -52,10 +57,13 @@ module mac(
     assign Aout = result;
     assign Done = stop;
 
-    always @(*) begin
+    always @(posedge Clk) begin
         if(Reset) begin
             product <= 0;
-            result <= 0;
+            result <= Ain;
+            sum <= 0;
+            sum_exp <= 0;
+            sum_sign_bit <= 0;
             exp_adder <= 0;
             sign_bit <= 0;
             expB <= 0;
@@ -72,14 +80,22 @@ module mac(
                 end
             1: begin 
                 stop <= 0;
-                if(B == 0 || C== 0) product <= 0;
-                else product <= {7'h1, B[3:0]} * {7'h1, C[3:0]};
+                if(B == 0 || C== 0) begin
+                    sign_bit <= 0;
+                    exp_adder <= 0;
+                    product <= 0;
 
-                expB <= B[6:4]- 3;
-                expC <= C[6:4]- 3;
-                sign_bit <= B[7] ^ C[7];
+                    ns <= 3;
+                end
+                else begin 
+                    product <= {7'h1, B[3:0]} * {7'h1, C[3:0]};
 
-                ns <= 2;
+                    expB <= B[6:4]- 3;
+                    expC <= C[6:4]- 3;
+                    sign_bit <= B[7] ^ C[7];
+
+                    ns <= 2;
+                end
                 end
             2: begin //End of multiplication
                 ns <= 3;
@@ -88,22 +104,66 @@ module mac(
 
                 end
             3: begin
-                if(Ain == 0) begin 
+                if(result == 0) begin 
                     result <= BC;
                     ns <= 0;
                 end
                 else if(BC == 0) begin
-                    result <= Ain;
+                    result <= result;
                     ns <= 0;
                 end
                 else begin
-                    
-                    ns <= 4;
+                    if(result[6:4] > BC[6:4])begin
+                        sum <= {2'b01, result[3:0], 7'h00};
+                        operand <= {2'b01, BC[3:0], 7'h00};
+                        shift <= result[6:4] - BC[6:4];
+                        sum_sign_bit <= result[7];
+                        sum_exp <= result[6:4];
+                    end
+                    else if(BC[6:4] > result[6:4]) begin
+                        sum <= {2'b01, BC[3:0], 7'h00};
+                        operand <= {2'b01, result[3:0], 7'h00};
+                        shift <= BC[6:4] - result[6:4];
+                        sum_sign_bit <= BC[7];
+                        sum_exp <= BC[6:4];
+                    end
+                    else if(result[3:0] > BC[3:0])begin
+                        sum <= {2'b01, result[3:0], 7'h00};
+                        operand <= {2'b01, BC[3:0], 7'h00};
+                        shift <= result[6:4] - BC[6:4];
+                        sum_sign_bit <= result[7];
+                        sum_exp <= result[6:4];
+                    end
+                    else begin
+                        sum <= {2'b01, BC[3:0], 7'h00};
+                        operand <= {2'b01, result[3:0], 7'h00};
+                        shift <= BC[6:4] - result[6:4];
+                        sum_sign_bit <= BC[7];
+                        sum_exp <= BC[6:4];
+                    end
+
+                    ns <= 7;
                 end
                 end
             4: begin 
+                sum <= sum + operand;
+                ns <= 6;
+                end
+            5: begin 
+                sum <= sum - operand;
+                ns <= 6;
+                end
+            6: begin 
+                result <= sum[12] ? {sum_sign_bit, sum_exp + 1, sum[11:8]} : {sum_sign_bit, sum_exp, sum[10:7]};
+
                 ns <= 0;
                 end
+            7: begin 
+                operand <= operand >> shift;
+
+                if(result[7] == BC[7]) ns <= 4;
+                else ns <= 5;
+                end     
             default: begin
                 ns <= 0;
                 end
@@ -111,7 +171,7 @@ module mac(
         end
     end
 
-    always @(posedge Clk) begin
+    always @(negedge Clk) begin
         cs <= ns;
     end
 
