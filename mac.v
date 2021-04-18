@@ -36,6 +36,7 @@ module mac(
     reg stop;
 
     wire [3:0] frac_wire;
+    wire [7:0]BC;
 
     reg [2:0]expB;
     reg [2:0]expC;
@@ -43,16 +44,18 @@ module mac(
     reg [9:0] product;
     reg [3:0] exp_adder;
     reg sign_bit;
+    reg [7:0] result;
 
     calc_frac_bits fraction(product, frac_wire);
     
-
-    assign Aout = {sign_bit, exp_adder[2:0], frac_wire};
+    assign BC = {sign_bit, exp_adder[2:0], frac_wire}
+    assign Aout = result;
     assign Done = stop;
 
     always @(*) begin
         if(Reset) begin
             product <= 0;
+            result <= 0;
             exp_adder <= 0;
             sign_bit <= 0;
             expB <= 0;
@@ -84,9 +87,19 @@ module mac(
                 exp_adder <= expB + expC + 3 + product[9];
 
                 end
-            3: begin 
-                ns <= 0;
-
+            3: begin
+                if(Ain == 0) begin 
+                    result <= BC;
+                    ns <= 0;
+                end
+                else if(BC == 0) begin
+                    result <= Ain;
+                    ns <= 0;
+                end
+                else begin
+                    
+                    ns <= 4;
+                end
                 end
             4: begin 
                 
