@@ -47,44 +47,55 @@ module mac(
     calc_frac_bits fraction(product, frac_wire);
     
 
-    assign Aout = {sign_bit, exp_adder[2:0], frac_wire};
+    assign Aout = {sign_bit, exp_adder[3:1], frac_wire};
     assign Done = stop;
 
     always @(*) begin
-        case(cs)
-        0: begin
-            stop <= 1;
-
-            if(Load) ns <= 1;
-            else ns <= 0;
-            end
-        1: begin 
-            stop <= 0;
-            if(B == 0 || C== 0) product <= 0;
-            else product <= {7'h1, B[3:0]} * {7'h1, C[3:0]};
-
-            expB <= B[6:4]- 3;
-            expC <= C[6:4]- 3;
-            sign_bit <= B[7] ^ C[7];
-
-            ns <= 2;
-            end
-        2: begin 
+        if(Reset) begin
+            product <= 0;
+            exp_adder <= 0;
+            sign_bit <= 0;
+            expB <= 0;
+            expC <= 0;
             ns <= 0;
+        end
+        else begin
+            case(cs)
+            0: begin
+                stop <= 1;
 
-            exp_adder <= expB + expC + 3;
+                if(Load) ns <= 1;
+                else ns <= 0;
+                end
+            1: begin 
+                stop <= 0;
+                if(B == 0 || C== 0) product <= 0;
+                else product <= {7'h1, B[3:0]} * {7'h1, C[3:0]};
 
-            end
-        3: begin 
-            ns <= 0;
-            end
-         4: begin 
-            
-            end
-         default: begin
-            ns <= 0;
-            end
-        endcase
+                expB <= B[6:4]- 3;
+                expC <= C[6:4]- 3;
+                sign_bit <= B[7] ^ C[7];
+
+                ns <= 2;
+                end
+            2: begin 
+                ns <= 0;
+
+                exp_adder <= expB + expC - 1;
+
+                end
+            3: begin 
+                ns <= 0;
+
+                end
+            4: begin 
+                
+                end
+            default: begin
+                ns <= 0;
+                end
+            endcase
+        end
     end
 
     always @(posedge Clk) begin
