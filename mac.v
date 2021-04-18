@@ -48,7 +48,7 @@ module mac(
 
     calc_frac_bits fraction(product, frac_wire);
     
-    assign BC = {sign_bit, exp_adder[2:0], frac_wire}
+    assign BC = {sign_bit, exp_adder[2:0], frac_wire};
     assign Aout = result;
     assign Done = stop;
 
@@ -102,7 +102,7 @@ module mac(
                 end
                 end
             4: begin 
-                
+                ns <= 0;
                 end
             default: begin
                 ns <= 0;
