@@ -95,7 +95,10 @@ module matrix(
     mac mac_22(.Clk(clk), .Ain(0), .B(B_22), .C(C_22), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out22));
 
     always @(*) begin
-        begin
+        if(Reset)begin
+            ns <= 0;
+        end
+        else begin
             case(cs)
             0: begin  // sets initial top left multiplicands
                 B_00 <= A00;
