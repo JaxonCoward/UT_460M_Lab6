@@ -111,6 +111,7 @@ module matrix(
 
             0: begin
                 Done <= 1;
+                load_mac = 9'b000000000;
                 if(Load == 1) begin
                     ns <= 1;
                 end
@@ -121,152 +122,117 @@ module matrix(
             
             1: begin  // sets initial top left multiplicands
                 Done <= 0;
-                if(done_mac == 9'b111111111) begin
-                    load_mac = 9'b000000001;
-                    B_00 <= A00;
-                    C_00 <= B00;
-                    ns <= 2;
-                end
-                else begin
-                    ns <= 1;
-                end
+                load_mac = 9'b000000001;
+                B_00 <= A00;
+                C_00 <= B00;
+                ns <= 2;
                 
             end
                 
             2: begin
             
-                if(done_mac == 9'b111111111)begin
-                    load_mac = 9'b000001011;
-                    B_00 <= B10;
-                    C_00 <= A01;
-                    
-                    B_01 <= B01;
-                    C_01 <= A00;
-    
-                    B_10 <= B00;
-                    C_10 <= A10; 
-                    
-                    ns <= 3; 
-                end
-                else begin
-                    ns <= 2;
-                end
+                load_mac = 9'b000001011;
+                B_00 <= B10;
+                C_00 <= A01;
+                
+                B_01 <= B01;
+                C_01 <= A00;
+
+                B_10 <= B00;
+                C_10 <= A10; 
+                
+                ns <= 3; 
             end
             3: begin 
-                if(done_mac == 9'b111111111) begin
-                    load_mac = 9'b001011111;
-                    B_00 <= B20;
-                    C_00 <= A02;
-                    
-                    B_01 <= B11;
-                    C_01 <= A01;
-    
-                    B_10 <= B10;
-                    C_10 <= A11; 
-                    
-                    B_02 <= B02;
-                    C_02 <= A00;
-                    
-                    B_11 <= B01;
-                    C_11 <= A10;
-    
-                    B_20 <= B00;
-                    C_20 <= A20;   
-                    
-                    ns <= 4;
-                end
-                else begin
-                    ns <= 3;
-                end
+                load_mac = 9'b001011111;
+                B_00 <= B20;
+                C_00 <= A02;
+                
+                B_01 <= B11;
+                C_01 <= A01;
+
+                B_10 <= B10;
+                C_10 <= A11; 
+                
+                B_02 <= B02;
+                C_02 <= A00;
+                
+                B_11 <= B01;
+                C_11 <= A10;
+
+                B_20 <= B00;
+                C_20 <= A20;   
+                
+                ns <= 4;
 
             end
             4: begin
-                if(done_mac == 9'b111111111)begin
-                    load_mac = 9'b011111110;
-                    B_01 <= B21;
-                    C_01 <= A02;
-    
-                    B_10 <= B20;
-                    C_10 <= A12; 
-                    
-                    B_02 <= B12;
-                    C_02 <= A01;
-                    
-                    B_11 <= B11;
-                    C_11 <= A11;
-    
-                    B_20 <= B10;
-                    C_20 <= A21; 
-                    
-                    B_12 <= B02;
-                    C_12 <= A10;
-    
-                    B_21 <= B01;
-                    C_21 <= A20;  
-                    
-                    ns <= 5; 
-                end
-                else begin
-                    ns <= 4;
-                end
+                load_mac = 9'b011111110;
+                B_01 <= B21;
+                C_01 <= A02;
+
+                B_10 <= B20;
+                C_10 <= A12; 
+                
+                B_02 <= B12;
+                C_02 <= A01;
+                
+                B_11 <= B11;
+                C_11 <= A11;
+
+                B_20 <= B10;
+                C_20 <= A21; 
+                
+                B_12 <= B02;
+                C_12 <= A10;
+
+                B_21 <= B01;
+                C_21 <= A20;  
+                
+                ns <= 5; 
             end
             5: begin 
-                if (done_mac == 9'b111111111) begin
-                    load_mac = 9'b111110100;
-                    B_02 <= B22;
-                    C_02 <= A02;
-                    
-                    B_11 <= B21;
-                    C_11 <= A12;
-    
-                    B_20 <= B20;
-                    C_20 <= A22; 
-                    
-                    B_12 <= B12;
-                    C_12 <= A11;
-    
-                    B_21 <= B11;
-                    C_21 <= A21;
-                    
-                    B_22 <= B02;
-                    C_22 <= A20;
-                    
-                    ns <= 6;
-                end
-                else begin
-                    ns <= 5;
-                end
+                load_mac = 9'b111110100;
+                B_02 <= B22;
+                C_02 <= A02;
+                
+                B_11 <= B21;
+                C_11 <= A12;
+
+                B_20 <= B20;
+                C_20 <= A22; 
+                
+                B_12 <= B12;
+                C_12 <= A11;
+
+                B_21 <= B11;
+                C_21 <= A21;
+                
+                B_22 <= B02;
+                C_22 <= A20;
+                
+                ns <= 6;
             end
             6: begin 
-                if(done_mac == 9'b111111111) begin
-                    load_mac = 9'b110100000;
-                    B_12 <= B22;
-                    C_12 <= A12;
-    
-                    B_21 <= B21;
-                    C_21 <= A22;
-                    
-                    B_22 <= B12;
-                    C_22 <= A21;
-                    
-                    ns <= 7;
-                end
-                else begin
-                    ns <= 6;
-                end
+                load_mac = 9'b110100000;
+                B_12 <= B22;
+                C_12 <= A12;
+
+                B_21 <= B21;
+                C_21 <= A22;
+                
+                B_22 <= B12;
+                C_22 <= A21;
+                
+                ns <= 7;
                 
             end
                 
             7: begin 
-                if(done_mac == 9'b111111111) begin
-                    load_mac = 9'b100000000;
-                    B_22 <= B22;
-                    C_22 <= A22;
-                    ns <= 0;
-                end
-                else begin
-                    ns <= 7;
-                end
+                load_mac = 9'b100000000;
+                B_22 <= B22;
+                C_22 <= A22;
+                ns <= 0;
             end
             default: begin
                 ns <= 0;
