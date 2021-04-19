@@ -84,8 +84,9 @@ module matrix(
     reg [8:0] load_mac;
     wire [8:0] done_mac;
     
-    reg [2:0] cs = 0;
-    reg [2:0] ns = 0;
+    reg [3:0] cs = 0;
+    reg [3:0] ns = 0;
+    reg [3:0] rs = 0;
     
     mac mac_00(.Clk(clk), .Ain(0), .B(B_00), .C(C_00), .Reset(Reset), .Load(load_mac[0]), .Done(done_mac[0]), .Aout(Out00));
     mac mac_01(.Clk(clk), .Ain(0), .B(B_01), .C(C_01), .Reset(Reset), .Load(load_mac[1]), .Done(done_mac[1]), .Aout(Out01));
@@ -125,7 +126,8 @@ module matrix(
                 load_mac = 9'b000000001;
                 B_00 <= A00;
                 C_00 <= B00;
-                ns <= 2;
+                ns <= 8;
+                rs <= 2;
                 
             end
                 
@@ -141,7 +143,8 @@ module matrix(
                 B_10 <= B00;
                 C_10 <= A10; 
                 
-                ns <= 3; 
+                ns <= 8;
+                rs <= 3; 
             end
             3: begin 
                 load_mac = 9'b001011111;
@@ -163,7 +166,8 @@ module matrix(
                 B_20 <= B00;
                 C_20 <= A20;   
                 
-                ns <= 4;
+                ns <= 8;
+                rs <= 4;
 
             end
             4: begin
@@ -189,7 +193,8 @@ module matrix(
                 B_21 <= B01;
                 C_21 <= A20;  
                 
-                ns <= 5; 
+                ns <= 8;
+                rs <= 5; 
             end
             5: begin 
                 load_mac = 9'b111110100;
@@ -211,7 +216,8 @@ module matrix(
                 B_22 <= B02;
                 C_22 <= A20;
                 
-                ns <= 6;
+                ns <= 8;
+                rs <= 6;
             end
             6: begin 
                 load_mac = 9'b110100000;
@@ -224,7 +230,8 @@ module matrix(
                 B_22 <= B12;
                 C_22 <= A21;
                 
-                ns <= 7;
+                ns <= 8;
+                rs <= 7;
                 
             end
                 
@@ -232,8 +239,17 @@ module matrix(
                 load_mac = 9'b100000000;
                 B_22 <= B22;
                 C_22 <= A22;
-                ns <= 0;
+
+                ns <= 8;
+                rs <= 0;
             end
+
+            8: begin 
+                load_mac = 9'b000000000;
+                if(done_mac == 9'h1FF) ns <= rs;
+                else ns <= 8;
+            end
+
             default: begin
                 ns <= 0;
                 end
