@@ -23,6 +23,7 @@
 module matrix_tb;
 
     reg clk;
+    reg [7:0] Ain;
     
     reg [7:0] A00;
     reg [7:0] A01;
@@ -59,7 +60,7 @@ module matrix_tb;
     
     
     matrix matrix1 (
-         clk,
+         clk, 
          A00, A01, A02, A10, A11, A12, A20, A21, A22,
          B00, B01, B02, B10, B11, B12, B20, B21, B22,
          Out00, Out01, Out02, Out10, Out11, Out12, Out20, Out21, Out22,
@@ -69,10 +70,13 @@ module matrix_tb;
     initial clk = 0;
     always #5 clk = ~clk;
         initial begin
+           Reset = 1;
+           Load = 0;
+           
+           #20
            Reset = 0;
            Load = 1;
            
-           #20
            A00 = 8'b00100100; A01= 8'b00100000; A02 = 8'b00100000; A10 = 8'b00100000; A11 = 8'b00100000; A12 = 8'b00100000; A20 = 8'b00100000; A21 = 8'b00100000; A22 = 8'b00100000;
            B00  = 8'b00101000;  B01 = 8'b00101000; B02 = 8'b00101000; B10 = 8'b00101000; B11 = 8'b00101000; B12 = 8'b00101000; B20 = 8'b00101000; B21 = 8'b00101000; B22 = 8'b00101000;
            
