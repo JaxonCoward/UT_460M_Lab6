@@ -57,6 +57,9 @@ module matrix_tb;
     
     reg Reset;
     reg Load;
+
+    wire [3:0]state;
+    wire [8:0]done_sigs;
     
     
     matrix matrix1 (
@@ -64,7 +67,7 @@ module matrix_tb;
          A00, A01, A02, A10, A11, A12, A20, A21, A22,
          B00, B01, B02, B10, B11, B12, B20, B21, B22,
          Out00, Out01, Out02, Out10, Out11, Out12, Out20, Out21, Out22,
-         Reset, Load, Done
+         Reset, Load, Done, state, done_sigs
     );
     
     initial clk = 0;

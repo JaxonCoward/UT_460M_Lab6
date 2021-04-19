@@ -55,8 +55,13 @@ module matrix(
 
     input Reset,
     input Load,
-    output reg Done
+    output reg Done,
+    output [3:0] state,
+    output [8:0] done_sigs
     );
+
+    assign state = cs;
+    assign done_sigs = done_mac;
     
     
     wire [7:0] Aout;
@@ -245,9 +250,13 @@ module matrix(
             end
 
             8: begin 
+                ns <= 9;
+            end
+
+            9: begin 
                 load_mac = 9'b000000000;
                 if(done_mac == 9'h1FF) ns <= rs;
-                else ns <= 8;
+                else ns <= 9;
             end
 
             default: begin
