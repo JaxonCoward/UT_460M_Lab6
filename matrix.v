@@ -22,8 +22,7 @@
 
 module matrix(
     input clk,
-    input [7:0] Ain,
-    
+
     input [7:0] A00,
     input [7:0] A01,
     input [7:0] A02,
@@ -85,15 +84,15 @@ module matrix(
     reg [2:0] cs = 0;
     reg [2:0] ns = 0;
     
-    mac mac_00(.Clk(clk), .Ain(Ain), .B(B_00), .C(C_00), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out00));
-    mac mac_01(.Clk(clk), .Ain(Ain), .B(B_01), .C(C_01), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out01));
-    mac mac_02(.Clk(clk), .Ain(Ain), .B(B_02), .C(C_02), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out02));
-    mac mac_10(.Clk(clk), .Ain(Ain), .B(B_10), .C(C_10), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out10));
-    mac mac_11(.Clk(clk), .Ain(Ain), .B(B_11), .C(C_11), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out11));
-    mac mac_12(.Clk(clk), .Ain(Ain), .B(B_12), .C(C_12), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out12));
-    mac mac_20(.Clk(clk), .Ain(Ain), .B(B_20), .C(C_20), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out20));
-    mac mac_21(.Clk(clk), .Ain(Ain), .B(B_21), .C(C_21), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out21));
-    mac mac_22(.Clk(clk), .Ain(Ain), .B(B_22), .C(C_22), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out22));
+    mac mac_00(.Clk(clk), .Ain(0), .B(B_00), .C(C_00), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out00));
+    mac mac_01(.Clk(clk), .Ain(0), .B(B_01), .C(C_01), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out01));
+    mac mac_02(.Clk(clk), .Ain(0), .B(B_02), .C(C_02), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out02));
+    mac mac_10(.Clk(clk), .Ain(0), .B(B_10), .C(C_10), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out10));
+    mac mac_11(.Clk(clk), .Ain(0), .B(B_11), .C(C_11), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out11));
+    mac mac_12(.Clk(clk), .Ain(0), .B(B_12), .C(C_12), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out12));
+    mac mac_20(.Clk(clk), .Ain(0), .B(B_20), .C(C_20), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out20));
+    mac mac_21(.Clk(clk), .Ain(0), .B(B_21), .C(C_21), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out21));
+    mac mac_22(.Clk(clk), .Ain(0), .B(B_22), .C(C_22), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out22));
 
     always @(*) begin
         begin
