@@ -54,12 +54,12 @@ module matrix(
     output[7:0] Out22,
 
     input Reset,
-    input Load
+    input Load,
+    output reg Done
     );
     
     
     wire [7:0] Aout;
-    wire Done;
     
     //these are temp regs for the B and C inputs for the MAC
     reg [7:0] B_00;
@@ -110,6 +110,7 @@ module matrix(
             case(cs)
 
             0: begin
+                Done <= 1;
                 if(Load == 1) begin
                     ns <= 1;
                 end
@@ -119,14 +120,15 @@ module matrix(
             end
             
             1: begin  // sets initial top left multiplicands
-                load_mac = 9'b000000001  & ~done_mac;
+                Done <= 0;
+                load_mac = 9'b000000001  & done_mac;
                 B_00 <= A00;
                 C_00 <= B00;
                 ns <= 2;
                 end
                 
             2: begin
-                load_mac = 9'b000001011  & ~done_mac;
+                load_mac = 9'b000001011  & done_mac;
                 B_00 <= B10;
                 C_00 <= A01;
                 
@@ -139,7 +141,7 @@ module matrix(
                 ns <= 3; 
                 end
             3: begin 
-                load_mac = 9'b001011111  & ~done_mac;
+                load_mac = 9'b001011111  & done_mac;
                 B_00 <= B20;
                 C_00 <= A02;
                 
@@ -162,7 +164,7 @@ module matrix(
 
                 end
             4: begin
-                load_mac = 9'b011111111  & ~done_mac;
+                load_mac = 9'b011111111  & done_mac;
                 B_01 <= B21;
                 C_01 <= A02;
 
@@ -188,7 +190,7 @@ module matrix(
                 
                 end
             5: begin 
-                load_mac = 9'b111111111  & ~done_mac;
+                load_mac = 9'b111111111  & done_mac;
                 B_02 <= B22;
                 C_02 <= A02;
                 
@@ -211,7 +213,7 @@ module matrix(
                 
                 end
             6: begin 
-                load_mac = 9'b111111111  & ~done_mac;
+                load_mac = 9'b111111111  & done_mac;
                 B_12 <= B22;
                 C_12 <= A12;
 
@@ -226,7 +228,7 @@ module matrix(
                 end
                 
             7: begin 
-                load_mac = 9'b111111111  & ~done_mac;
+                load_mac = 9'b111111111  & done_mac;
                 B_22 <= B22;
                 C_22 <= A22;
                 ns <= 0;
