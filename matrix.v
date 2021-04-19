@@ -55,13 +55,9 @@ module matrix(
 
     input Reset,
     input Load,
-    output reg Done,
-    output [3:0] state,
-    output [8:0] done_sigs
+    output reg Done
     );
 
-    assign state = cs;
-    assign done_sigs = done_mac;
     
     
     wire [7:0] Aout;
