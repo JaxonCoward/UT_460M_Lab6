@@ -121,7 +121,7 @@ module matrix(
             
             1: begin  // sets initial top left multiplicands
                 Done <= 0;
-                if(done_mac == 9'b000000000) begin
+                if(done_mac == 9'b111111111) begin
                     load_mac = 9'b000000001;
                     B_00 <= A00;
                     C_00 <= B00;
@@ -135,7 +135,7 @@ module matrix(
                 
             2: begin
             
-                if(done_mac == 9'b000000000)begin
+                if(done_mac == 9'b111111111)begin
                     load_mac = 9'b000001011;
                     B_00 <= B10;
                     C_00 <= A01;
@@ -153,7 +153,7 @@ module matrix(
                 end
             end
             3: begin 
-                if(done_mac == 9'b000000000) begin
+                if(done_mac == 9'b111111111) begin
                     load_mac = 9'b001011111;
                     B_00 <= B20;
                     C_00 <= A02;
@@ -181,7 +181,7 @@ module matrix(
 
             end
             4: begin
-                if(done_mac == 9'b000000001)begin
+                if(done_mac == 9'b111111110)begin
                     load_mac = 9'b011111110;
                     B_01 <= B21;
                     C_01 <= A02;
@@ -211,7 +211,7 @@ module matrix(
                 end
             end
             5: begin 
-                if (done_mac == 9'b000001011) begin
+                if (done_mac == 9'b111110100) begin
                     load_mac = 9'b111110100;
                     B_02 <= B22;
                     C_02 <= A02;
@@ -238,7 +238,7 @@ module matrix(
                 end
             end
             6: begin 
-                if(done_mac == 9'b001011111) begin
+                if(done_mac == 9'b110100000) begin
                     load_mac = 9'b110100000;
                     B_12 <= B22;
                     C_12 <= A12;
@@ -258,7 +258,7 @@ module matrix(
             end
                 
             7: begin 
-                if(done_mac == 9'b011111111) begin
+                if(done_mac == 9'b100000000) begin
                     load_mac = 9'b100000000;
                     B_22 <= B22;
                     C_22 <= A22;
