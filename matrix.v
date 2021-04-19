@@ -181,7 +181,7 @@ module matrix(
 
             end
             4: begin
-                if(done_mac == 9'b111111110)begin
+                if(done_mac == 9'b111111111)begin
                     load_mac = 9'b011111110;
                     B_01 <= B21;
                     C_01 <= A02;
@@ -211,7 +211,7 @@ module matrix(
                 end
             end
             5: begin 
-                if (done_mac == 9'b111110100) begin
+                if (done_mac == 9'b111111111) begin
                     load_mac = 9'b111110100;
                     B_02 <= B22;
                     C_02 <= A02;
@@ -238,7 +238,7 @@ module matrix(
                 end
             end
             6: begin 
-                if(done_mac == 9'b110100000) begin
+                if(done_mac == 9'b111111111) begin
                     load_mac = 9'b110100000;
                     B_12 <= B22;
                     C_12 <= A12;
@@ -258,7 +258,7 @@ module matrix(
             end
                 
             7: begin 
-                if(done_mac == 9'b100000000) begin
+                if(done_mac == 9'b111111111) begin
                     load_mac = 9'b100000000;
                     B_22 <= B22;
                     C_22 <= A22;
