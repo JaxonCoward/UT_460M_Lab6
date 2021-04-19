@@ -81,31 +81,52 @@ module matrix(
     reg [7:0] C_21;
     reg [7:0] C_22;
     
+    reg [8:0] load_mac;
+    wire [8:0] done_mac;
+    
     reg [2:0] cs = 0;
     reg [2:0] ns = 0;
     
-    mac mac_00(.Clk(clk), .Ain(0), .B(B_00), .C(C_00), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out00));
-    mac mac_01(.Clk(clk), .Ain(0), .B(B_01), .C(C_01), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out01));
-    mac mac_02(.Clk(clk), .Ain(0), .B(B_02), .C(C_02), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out02));
-    mac mac_10(.Clk(clk), .Ain(0), .B(B_10), .C(C_10), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out10));
-    mac mac_11(.Clk(clk), .Ain(0), .B(B_11), .C(C_11), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out11));
-    mac mac_12(.Clk(clk), .Ain(0), .B(B_12), .C(C_12), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out12));
-    mac mac_20(.Clk(clk), .Ain(0), .B(B_20), .C(C_20), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out20));
-    mac mac_21(.Clk(clk), .Ain(0), .B(B_21), .C(C_21), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out21));
-    mac mac_22(.Clk(clk), .Ain(0), .B(B_22), .C(C_22), .Reset(Reset), .Load(Load), .Done(Done), .Aout(Out22));
+    mac mac_00(.Clk(clk), .Ain(0), .B(B_00), .C(C_00), .Reset(Reset), .Load(load_mac[0]), .Done(done_mac[0]), .Aout(Out00));
+    mac mac_01(.Clk(clk), .Ain(0), .B(B_01), .C(C_01), .Reset(Reset), .Load(load_mac[1]), .Done(done_mac[1]), .Aout(Out01));
+    mac mac_02(.Clk(clk), .Ain(0), .B(B_02), .C(C_02), .Reset(Reset), .Load(load_mac[2]), .Done(done_mac[2]), .Aout(Out02));
+    mac mac_10(.Clk(clk), .Ain(0), .B(B_10), .C(C_10), .Reset(Reset), .Load(load_mac[3]), .Done(done_mac[3]), .Aout(Out10));
+    mac mac_11(.Clk(clk), .Ain(0), .B(B_11), .C(C_11), .Reset(Reset), .Load(load_mac[4]), .Done(done_mac[4]), .Aout(Out11));
+    mac mac_12(.Clk(clk), .Ain(0), .B(B_12), .C(C_12), .Reset(Reset), .Load(load_mac[5]), .Done(done_mac[5]), .Aout(Out12));
+    mac mac_20(.Clk(clk), .Ain(0), .B(B_20), .C(C_20), .Reset(Reset), .Load(load_mac[6]), .Done(done_mac[6]), .Aout(Out20));
+    mac mac_21(.Clk(clk), .Ain(0), .B(B_21), .C(C_21), .Reset(Reset), .Load(load_mac[7]), .Done(done_mac[7]), .Aout(Out21));
+    mac mac_22(.Clk(clk), .Ain(0), .B(B_22), .C(C_22), .Reset(Reset), .Load(load_mac[8]), .Done(done_mac[8]), .Aout(Out22));
+    
+    initial begin
+        load_mac = 0;
+    end
 
     always @(*) begin
+
         if(Reset)begin
             ns <= 0;
         end
         else begin
             case(cs)
-            0: begin  // sets initial top left multiplicands
+
+            0: begin
+                if(Load == 1) begin
+                    ns <= 1;
+                end
+                else begin
+                    ns <= 0;
+                end
+            end
+            
+            1: begin  // sets initial top left multiplicands
+                load_mac = 9'b000000001  & ~done_mac;
                 B_00 <= A00;
                 C_00 <= B00;
-                ns <= 1;
+                ns <= 2;
                 end
-            1: begin
+                
+            2: begin
+                load_mac = 9'b000001011  & ~done_mac;
                 B_00 <= B10;
                 C_00 <= A01;
                 
@@ -115,9 +136,10 @@ module matrix(
                 B_10 <= B00;
                 C_10 <= A10; 
                 
-                ns <= 2; 
+                ns <= 3; 
                 end
-            2: begin 
+            3: begin 
+                load_mac = 9'b001011111  & ~done_mac;
                 B_00 <= B20;
                 C_00 <= A02;
                 
@@ -136,11 +158,11 @@ module matrix(
                 B_20 <= B00;
                 C_20 <= A20;   
                 
-                ns <= 3;
+                ns <= 4;
 
                 end
-            3: begin
-                
+            4: begin
+                load_mac = 9'b011111111  & ~done_mac;
                 B_01 <= B21;
                 C_01 <= A02;
 
@@ -162,11 +184,11 @@ module matrix(
                 B_21 <= B01;
                 C_21 <= A20;  
                 
-                ns <= 4; 
+                ns <= 5; 
                 
                 end
-            4: begin 
-                
+            5: begin 
+                load_mac = 9'b111111111  & ~done_mac;
                 B_02 <= B22;
                 C_02 <= A02;
                 
@@ -185,11 +207,11 @@ module matrix(
                 B_22 <= B02;
                 C_22 <= A20;
                 
-                ns <= 5;
+                ns <= 6;
                 
                 end
-            5: begin 
-
+            6: begin 
+                load_mac = 9'b111111111  & ~done_mac;
                 B_12 <= B22;
                 C_12 <= A12;
 
@@ -199,15 +221,15 @@ module matrix(
                 B_22 <= B12;
                 C_22 <= A21;
                 
-                ns <= 6;
+                ns <= 7;
                 
                 end
                 
-            6: begin 
-                
+            7: begin 
+                load_mac = 9'b111111111  & ~done_mac;
                 B_22 <= B22;
                 C_22 <= A22;
-                
+                ns <= 0;
                 end
             default: begin
                 ns <= 0;
