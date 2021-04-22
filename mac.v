@@ -31,8 +31,8 @@ module mac(
     output [7:0] Aout
     );
 
-    reg [2:0] cs = 0;
-    reg [2:0] ns = 0;
+    reg [3:0] cs = 0;
+    reg [4:0] ns = 0;
     reg stop;
 
     wire [3:0] frac_wire;
@@ -49,6 +49,7 @@ module mac(
     reg [9:0] product;
     reg [3:0] exp_adder;
     reg sign_bit;
+    reg [3:0]sum_frac;
     reg [7:0] result = 0;
 
     calc_frac_bits fraction(product, frac_wire);
@@ -154,16 +155,40 @@ module mac(
                 ns <= 6;
                 end
             6: begin 
-                result <= sum[12] ? {sum_sign_bit, sum_exp + 1, sum[11:8]} : {sum_sign_bit, sum_exp, sum[10:7]};
+                if(sum[12]) begin 
+                    sum_exp <= sum_exp + 1;
+                    sum_frac <= sum[11:8];
+                end
+                else if(sum[11]) begin
+                    sum_exp <= sum_exp;
+                    sum_frac <= sum[10:7];
+                end
+                else if(sum[10]) begin
+                    sum_exp <= sum_exp - 1;
+                    sum_frac <= sum[9:6];
+                end
+                else if(sum[9]) begin
+                    sum_exp <= sum_exp - 2;
+                    sum_frac <= sum[8:5];
+                end
+                else begin
+                    sum_exp <= sum_exp - 3;
+                    sum_frac <= sum[7:4];
+                end
 
-                ns <= 0;
+                ns <= 8;
                 end
             7: begin 
                 operand <= operand >> shift;
 
                 if(result[7] == BC[7]) ns <= 4;
                 else ns <= 5;
-                end     
+                end   
+            8: begin 
+                result <= {sum_sign_bit, sum_exp, sum_frac};
+
+                ns <= 0;
+            end
             default: begin
                 ns <= 0;
                 end
